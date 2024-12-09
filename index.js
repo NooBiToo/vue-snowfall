@@ -1,0 +1,1 @@
+export { useSnowfall } from './src/useSnowfall.js';
