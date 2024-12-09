@@ -1,4 +1,14 @@
+<div align="center">
+  <a href="https://www.npmjs.com/package/vue-snowfall">
+    <img alt="current version" src="https://img.shields.io/npm/v/vue-snowfall">
+  </a>
+  <img alt="license" src="https://img.shields.io/github/license/NooBiToo/vue-snowfall" />
+</div>
+
 # Snowfall Effect in Vue.js
+
+<img alt="flakes" src="./src/assets/flakes.png" />
+
 This repository provides a simple and customizable snowfall effect for your web applications using Vue.js. The useSnowfall function allows you to easily add and control falling snowflakes on your webpage.
 
 ## Table of Contents
