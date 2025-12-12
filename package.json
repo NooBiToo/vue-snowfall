@@ -1,10 +1,54 @@
 {
   "name": "vue-snowfall",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "A Vue 3 composable for creating snowfall effects",
-  "main": "index.js",
-  "module": "index.js",
-  "keywords": ["vue", "snowfall", "animation", "effect", "composable"],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "vue-3",
+    "vuejs",
+    "snowfall",
+    "snow",
+    "snowflake",
+    "snowflakes",
+    "winter",
+    "christmas",
+    "holiday",
+    "seasonal",
+    "animation",
+    "animations",
+    "effect",
+    "effects",
+    "visual-effect",
+    "particle",
+    "particles",
+    "composable",
+    "composition-api",
+    "decorative",
+    "decoration",
+    "ui",
+    "ux",
+    "canvas",
+    "svg",
+    "css-animation",
+    "performance",
+    "lightweight",
+    "minimal",
+    "customizable",
+    "typescript",
+    "javascript"
+  ],
   "author": "Erlan Kaparov",
   "license": "MIT",
   "repository": {
@@ -13,5 +57,8 @@
   },
   "peerDependencies": {
     "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.12"
   }
 }
