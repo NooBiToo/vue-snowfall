@@ -1,6 +1,6 @@
 {
   "name": "vue-snowfall",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "A Vue 3 composable for creating snowfall effects",
   "main": "index.js",
   "module": "index.js",
