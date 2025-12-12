@@ -8,9 +8,12 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # permissions необходимы для OIDC:
+    # - contents: read - для чтения кода репозитория
+    # - id-token: write - для получения OIDC токена от GitHub (это ключевой момент!)
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # GitHub выдаст OIDC токен, который будет использован для аутентификации в NPM
     
     steps:
       - name: Checkout code
@@ -21,6 +24,11 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+          # use-node-oidc: true включает автоматическую OIDC аутентификацию:
+          # 1. GitHub Actions получает OIDC токен (благодаря id-token: write)
+          # 2. Этот токен автоматически используется для аутентификации в NPM
+          # 3. NPM проверяет, что репозиторий настроен как доверенный источник
+          # 4. Если все настроено правильно - публикация проходит успешно
           use-node-oidc: true
 
       - name: Install pnpm
@@ -55,11 +63,43 @@ jobs:
           echo "=== OIDC Configuration ==="
           echo "Repository: ${{ github.repository }}"
           echo "Ref: ${{ github.ref }}"
-          echo "OIDC will be used for authentication during publish"
+          echo ""
+          echo "=== Checking OIDC Token ==="
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "✓ OIDC token request token is available"
+          else
+            echo "✗ OIDC token request token is NOT available"
+          fi
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "✓ OIDC token request URL is available"
+          else
+            echo "✗ OIDC token request URL is NOT available"
+          fi
+          echo ""
+          echo "=== NPM Configuration ==="
+          if [ -f "$HOME/.npmrc" ]; then
+            echo "✓ .npmrc file exists"
+            # Не показываем содержимое, так как там может быть токен
+          else
+            echo "✗ .npmrc file does NOT exist"
+          fi
+
+      - name: Setup NPM token (fallback if OIDC doesn't work)
+        if: ${{ secrets.NPM_TOKEN != '' }}
+        run: |
+          echo "Using NPM_TOKEN from secrets (OIDC fallback)"
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > $HOME/.npmrc
 
       - name: Publish to NPM
         run: |
           echo "Publishing vue-snowfall@${{ steps.get_version.outputs.version }}"
+          echo ""
+          if [ -f "$HOME/.npmrc" ]; then
+            echo "Using token-based authentication"
+          else
+            echo "Using OIDC authentication"
+          fi
+          echo ""
           pnpm publish --access public --no-git-checks
         continue-on-error: false
 
