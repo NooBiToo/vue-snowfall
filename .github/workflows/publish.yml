@@ -45,6 +45,21 @@ jobs:
           fi
           echo "Version verified: $PACKAGE_VERSION"
 
+      - name: Verify NPM authentication and package
+        run: |
+          echo "=== NPM Package Information ==="
+          CURRENT_VERSION=$(npm view vue-snowfall version 2>/dev/null || echo "unknown")
+          echo "Current version in NPM: $CURRENT_VERSION"
+          echo "Package name: vue-snowfall"
+          echo ""
+          echo "=== OIDC Configuration ==="
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "OIDC will be used for authentication during publish"
+
       - name: Publish to NPM
-        run: pnpm publish --access public --no-git-checks
+        run: |
+          echo "Publishing vue-snowfall@${{ steps.get_version.outputs.version }}"
+          pnpm publish --access public --no-git-checks
+        continue-on-error: false
 
