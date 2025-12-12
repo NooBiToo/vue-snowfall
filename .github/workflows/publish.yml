@@ -3,14 +3,14 @@ name: Publish to NPM
 on:
   push:
     tags:
-      - 'v*'  # Запускается при создании тега, начинающегося с 'v'
+      - 'v*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # Необходимо для OIDC trusted publishing
+      id-token: write
     
     steps:
       - name: Checkout code
@@ -21,15 +21,12 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          use-node-oidc: true  # Используем OIDC trusted publishing
+          use-node-oidc: true
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Extract version from tag
         id: get_version
@@ -50,5 +47,4 @@ jobs:
 
       - name: Publish to NPM
         run: pnpm publish --access public --no-git-checks
-        # При использовании OIDC trusted publishing токен не требуется
 
